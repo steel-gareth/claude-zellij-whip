@@ -1,10 +1,16 @@
 import Foundation
 
-private let zellijPaths = [
-  "/opt/homebrew/bin/zellij",
-  "/usr/local/bin/zellij",
-  "/usr/bin/zellij",
-]
+private let zellijPaths: [String] = {
+  let home = FileManager.default.homeDirectoryForCurrentUser.path
+  let user = NSUserName()
+  return [
+    "\(home)/.nix-profile/bin/zellij",
+    "/etc/profiles/per-user/\(user)/bin/zellij",
+    "/opt/homebrew/bin/zellij",
+    "/usr/local/bin/zellij",
+    "/usr/bin/zellij",
+  ]
+}()
 
 func findZellijPath() -> String? {
   zellijPaths.first { FileManager.default.fileExists(atPath: $0) }

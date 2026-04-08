@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, zellij, src, gitSHA ? "unknown" }:
+{ lib, stdenvNoCC, src, gitSHA ? "unknown" }:
 
 stdenvNoCC.mkDerivation {
   pname = "claude-zellij-whip";
@@ -8,14 +8,8 @@ stdenvNoCC.mkDerivation {
 
   # nixpkgs ships Swift 5.10 but this project requires Swift 6.0;
   # use the system toolchain (Xcode / CommandLineTools) instead.
-
-  postPatch = ''
-    substituteInPlace Sources/ClaudeZellijWhipCore/ZellijContext.swift \
-      --replace-fail \
-        '"/opt/homebrew/bin/zellij",' \
-        '"${zellij}/bin/zellij",
-    "/opt/homebrew/bin/zellij",'
-  '';
+  # Zellij is discovered at runtime via nix-profile paths (see ZellijContext.swift)
+  # so no build-time dependency on the zellij package is needed.
 
   buildPhase = ''
     runHook preBuild
