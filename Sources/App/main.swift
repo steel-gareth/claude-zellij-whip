@@ -8,7 +8,7 @@ let app = NSApplication.shared
 let args = CommandLine.arguments
 let mode = args.count > 1 ? args[1] : "listen"
 
-log.info("claude-zellij-whip \(appVersion, privacy: .public) (build \(buildNumber, privacy: .public)) mode=\(mode, privacy: .public)")
+log.notice("claude-zellij-whip \(appVersion, privacy: .public) (build \(buildNumber, privacy: .public)) mode=\(mode, privacy: .public)")
 
 if args.count > 1 && args[1] == "notify" {
   Task {
