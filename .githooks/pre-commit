@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Generate Version.swift with calver and build number before each commit.
+
+today=$(date +%Y.%m.%d)
+daily_count=$(git log --oneline --since="midnight" 2>/dev/null | wc -l | tr -d ' ')
+daily_count=$((daily_count + 1))
+version="${today}.${daily_count}"
+
+total_commits=$(git rev-list --count HEAD 2>/dev/null || echo 0)
+build_number=$((total_commits + 1))
+
+cat > Sources/ClaudeZellijWhipCore/Version.swift << EOF
+public let appVersion = "${version}"
+public let buildNumber = ${build_number}
+EOF
+
+git add Sources/ClaudeZellijWhipCore/Version.swift

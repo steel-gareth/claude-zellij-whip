@@ -11,10 +11,20 @@ let package = Package(
       name: "PrivateAPI",
       path: "PrivateAPI"
     ),
+    .target(
+      name: "ClaudeZellijWhipCore",
+      dependencies: ["PrivateAPI"],
+      path: "Sources/ClaudeZellijWhipCore"
+    ),
     .executableTarget(
       name: "claude-zellij-whip",
-      dependencies: ["PrivateAPI"],
-      path: "Sources"
+      dependencies: ["ClaudeZellijWhipCore"],
+      path: "Sources/App"
+    ),
+    .testTarget(
+      name: "ClaudeZellijWhipTests",
+      dependencies: ["ClaudeZellijWhipCore"],
+      path: "Tests/ClaudeZellijWhipTests"
     ),
   ]
 )

@@ -32,7 +32,10 @@ func getCurrentTabName(session: String?) -> String? {
   let data = pipe.fileHandleForReading.readDataToEndOfFile()
   guard let layout = String(data: data, encoding: .utf8) else { return nil }
 
-  // Match: tab name="X" ... focus=true
+  return parseTabName(from: layout)
+}
+
+func parseTabName(from layout: String) -> String? {
   let pattern = #"tab name="([^"]+)"[^>]*focus=true"#
 
   guard let regex = try? NSRegularExpression(pattern: pattern, options: []),

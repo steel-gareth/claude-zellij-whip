@@ -6,7 +6,7 @@ import PrivateAPI
 private let log = Logger(subsystem: "dev.rvcas.claude-zellij-whip", category: "focus")
 
 func focusGhostty(windowID: UInt32? = nil) {
-  log.info("focusGhostty called with windowID: \(windowID.map { String($0) } ?? "nil")")
+  log.info("focusGhostty called with windowID: \(windowID.map { String($0) } ?? "nil", privacy: .public)")
 
   guard let ghostty = NSWorkspace.shared.runningApplications
     .first(where: { $0.bundleIdentifier == "com.mitchellh.ghostty" })
@@ -18,7 +18,7 @@ func focusGhostty(windowID: UInt32? = nil) {
   if let windowID = windowID,
     raiseGhosttyWindow(pid: ghostty.processIdentifier, windowID: windowID)
   {
-    log.info("Raised specific window \(windowID), activating Ghostty")
+    log.info("Raised specific window \(windowID, privacy: .public), activating Ghostty")
     ghostty.activate(options: [.activateIgnoringOtherApps])
   } else {
     log.info("Falling back to activate all windows")
@@ -43,24 +43,24 @@ private func raiseGhosttyWindow(pid: pid_t, windowID: UInt32) -> Bool {
     return false
   }
 
-  log.info("Searching \(windows.count) windows for windowID \(windowID)")
+  log.info("Searching \(windows.count, privacy: .public) windows for windowID \(windowID, privacy: .public)")
 
   for window in windows {
     var axWindowID: UInt32 = 0
     guard _AXUIElementGetWindow(window, &axWindowID) == .success else { continue }
     if axWindowID == windowID {
       AXUIElementPerformAction(window, kAXRaiseAction as CFString)
-      log.info("Found and raised window \(windowID)")
+      log.info("Found and raised window \(windowID, privacy: .public)")
       return true
     }
   }
 
-  log.warning("Window \(windowID) not found among current windows")
+  log.warning("Window \(windowID, privacy: .public) not found among current windows")
   return false
 }
 
 func findGhosttyWindowID(session: String?) -> UInt32? {
-  log.info("findGhosttyWindowID called with session: \(session ?? "nil")")
+  log.info("findGhosttyWindowID called with session: \(session ?? "nil", privacy: .public)")
 
   guard let session = session, !session.isEmpty else {
     log.info("No session name, skipping window lookup")
@@ -90,7 +90,7 @@ func findGhosttyWindowID(session: String?) -> UInt32? {
     return nil
   }
 
-  log.info("Found \(windows.count) Ghostty window(s), looking for session: \(session)")
+  log.info("Found \(windows.count, privacy: .public) Ghostty window(s), looking for session: \(session, privacy: .public)")
 
   for window in windows {
     var titleValue: CFTypeRef?
@@ -104,19 +104,20 @@ func findGhosttyWindowID(session: String?) -> UInt32? {
 
     var windowID: UInt32 = 0
     let gotID = _AXUIElementGetWindow(window, &windowID) == .success
-    log.info("  Window title: \"\(title)\" (id: \(gotID ? String(windowID) : "unknown"))")
+    let shortTitle = title.count > 5 ? String(title.prefix(5)) + "..." : title
+    log.info("  Window title: \"\(shortTitle, privacy: .public)\" (id: \(gotID ? String(windowID) : "unknown", privacy: .public))")
 
     if title.localizedCaseInsensitiveContains(session) {
       guard gotID else {
         log.error("Matched window but failed to get CGWindowID")
         continue
       }
-      log.info("Matched! Returning windowID \(windowID)")
+      log.info("Matched! Returning windowID \(windowID, privacy: .public)")
       return windowID
     }
   }
 
-  log.warning("No Ghostty window title contains session: \(session)")
+  log.warning("No Ghostty window title contains session: \(session, privacy: .public)")
   return nil
 }
 

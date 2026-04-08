@@ -1,4 +1,4 @@
-.PHONY: build release clean install uninstall sign
+.PHONY: build release clean install uninstall sign setup
 
 APP_NAME = ClaudeZellijWhip
 BUNDLE_NAME = $(APP_NAME).app
@@ -28,6 +28,12 @@ bundle: release
 	@cp .build/release/$(EXECUTABLE_NAME) $(BUNDLE_NAME)/Contents/MacOS/
 	@cp Resources/Info.plist $(BUNDLE_NAME)/Contents/
 	@cp Resources/AppIcon.icns $(BUNDLE_NAME)/Contents/Resources/
+	@GIT_SHA=$$(git rev-parse HEAD 2>/dev/null || echo "unknown"); \
+	 BUILD_NUM=$$(git rev-list --count HEAD 2>/dev/null || echo "0"); \
+	 VERSION=$$(grep 'appVersion' Sources/ClaudeZellijWhipCore/Version.swift | sed 's/.*"\(.*\)".*/\1/'); \
+	 /usr/libexec/PlistBuddy -c "Add :GitCommitSHA string $$GIT_SHA" $(BUNDLE_NAME)/Contents/Info.plist; \
+	 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $$VERSION" $(BUNDLE_NAME)/Contents/Info.plist; \
+	 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $$BUILD_NUM" $(BUNDLE_NAME)/Contents/Info.plist
 	@echo "App bundle created: $(BUNDLE_NAME)"
 
 sign: bundle
@@ -55,6 +61,10 @@ uninstall:
 test-notify: install
 	@echo "Sending test notification..."
 	open $(INSTALL_DIR)/$(BUNDLE_NAME) --args notify --message "Test notification from Claude Zellij Whip" --title "Test"
+
+setup:
+	git config core.hooksPath .githooks
+	@echo "Git hooks configured."
 
 # List available signing identities
 list-identities:

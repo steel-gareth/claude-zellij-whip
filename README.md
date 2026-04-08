@@ -45,10 +45,31 @@ Make sure room is loaded in your Zellij session (via layout or config).
 ```bash
 git clone https://github.com/rvcas/claude-zellij-whip
 cd claude-zellij-whip
+make setup    # configure git hooks (auto-generates version on each commit)
 make install
 ```
 
 The app will be installed to `~/Applications/ClaudeZellijWhip.app`.
+
+#### With Nix
+
+Add the flake to your config inputs:
+
+```nix
+{
+  inputs.claude-zellij-whip.url = "github:rvcas/claude-zellij-whip";
+}
+```
+
+Then add the package (nix-darwin, home-manager, etc.):
+
+```nix
+environment.systemPackages = [
+  inputs.claude-zellij-whip.packages.${system}.default
+];
+```
+
+The app is installed to `$out/Applications/ClaudeZellijWhip.app` with version and git SHA baked in.
 
 #### Code Signing (Optional)
 
@@ -95,6 +116,14 @@ Add to `~/.claude/settings.json` (see [hooks documentation](https://docs.anthrop
           "command": "open ~/Applications/ClaudeZellijWhip.app --args notify --title 'Claude Code' --message 'Permission needed' --folder ${CLAUDE_PROJECT_DIR##*/}"
         }]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [{
+          "type": "command",
+          "command": "open ~/Applications/ClaudeZellijWhip.app --args clear"
+        }]
+      }
     ]
   }
 }
@@ -129,11 +158,15 @@ room plugin calls focus_terminal_pane(pane_id)
 ```
 claude-zellij-whip/
 ├── Sources/
-│   ├── main.swift              # Entry point, mode detection
-│   ├── AppDelegate.swift       # Notification click handling
-│   ├── NotificationSender.swift # Notification creation
-│   ├── FocusManager.swift      # Ghostty/Zellij focus logic
-│   └── ZellijContext.swift     # Tab name extraction
+│   ├── App/
+│   │   └── main.swift              # Entry point, mode detection
+│   └── ClaudeZellijWhipCore/
+│       ├── AppDelegate.swift       # Notification click handling
+│       ├── NotificationSender.swift # Notification creation & clearing
+│       ├── FocusManager.swift      # Ghostty/Zellij focus logic
+│       └── ZellijContext.swift     # Tab name extraction
+├── Tests/
+│   └── ClaudeZellijWhipTests/      # Unit tests
 ├── Resources/
 │   ├── Info.plist              # App bundle config (LSUIElement)
 │   └── AppIcon.icns            # App icon (shows in notifications)
@@ -143,6 +176,7 @@ claude-zellij-whip/
 
 ## Makefile Targets
 
+- `make setup` - Configure git hooks (calver auto-versioning)
 - `make build` - Debug build
 - `make release` - Release build
 - `make install` - Build, bundle, sign, and install to ~/Applications

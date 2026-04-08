@@ -1,8 +1,8 @@
 import AppKit
 import UserNotifications
 
-class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
-  func applicationDidFinishLaunching(_ notification: Notification) {
+public class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
+  public func applicationDidFinishLaunching(_ notification: Notification) {
     UNUserNotificationCenter.current().delegate = self
 
     if let userInfo = notification.userInfo,
@@ -13,14 +13,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
   }
 
-  func userNotificationCenter(
+  public func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     didReceive response: UNNotificationResponse
   ) async {
     handleNotificationResponse(response)
   }
 
-  func userNotificationCenter(
+  public func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     willPresent notification: UNNotification
   ) async -> UNNotificationPresentationOptions {

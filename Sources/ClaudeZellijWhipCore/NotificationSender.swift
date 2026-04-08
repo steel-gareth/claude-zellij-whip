@@ -1,7 +1,7 @@
 import Foundation
 import UserNotifications
 
-func sendNotification(args: [String]) async {
+public func sendNotification(args: [String]) async {
   let message = parseArg(args, flag: "--message") ?? "Notification"
   let baseTitle = parseArg(args, flag: "--title") ?? "Claude Code"
 
@@ -42,7 +42,7 @@ func sendNotification(args: [String]) async {
   ]
 
   let request = UNNotificationRequest(
-    identifier: UUID().uuidString,
+    identifier: notificationIdentifier(),
     content: content,
     trigger: nil
   )
@@ -52,6 +52,21 @@ func sendNotification(args: [String]) async {
   } catch {
     print("Failed to send notification: \(error)")
   }
+}
+
+public func clearNotification(all: Bool = false) async {
+  let center = UNUserNotificationCenter.current()
+  if all {
+    center.removeAllDeliveredNotifications()
+  } else {
+    center.removeDeliveredNotifications(withIdentifiers: [notificationIdentifier()])
+  }
+}
+
+func notificationIdentifier() -> String {
+  let session = ProcessInfo.processInfo.environment["ZELLIJ_SESSION_NAME"] ?? ""
+  let paneId = ProcessInfo.processInfo.environment["ZELLIJ_PANE_ID"] ?? ""
+  return "claude-prompt-\(session)-\(paneId)"
 }
 
 func parseArg(_ args: [String], flag: String) -> String? {
