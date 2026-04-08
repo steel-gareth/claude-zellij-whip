@@ -3,7 +3,7 @@ import ApplicationServices
 import OSLog
 import PrivateAPI
 
-private let log = Logger(subsystem: "dev.rvcas.claude-zellij-whip", category: "focus")
+private let log = Logger(subsystem: "dev.steel-gareth.claude-zellij-whip", category: "focus")
 
 func focusGhostty(windowID: UInt32? = nil) {
   log.info("focusGhostty called with windowID: \(windowID.map { String($0) } ?? "nil", privacy: .public)")

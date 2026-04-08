@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleIdentifier</key>
-    <string>dev.rvcas.claude-zellij-whip</string>
+    <string>dev.steel-gareth.claude-zellij-whip</string>
     <key>CFBundleName</key>
     <string>ClaudeZellijWhip</string>
     <key>CFBundleDisplayName</key>

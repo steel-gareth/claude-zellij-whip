@@ -43,7 +43,7 @@ Make sure room is loaded in your Zellij session (via layout or config).
 ### 2. Build and install ClaudeZellijWhip
 
 ```bash
-git clone https://github.com/rvcas/claude-zellij-whip
+git clone https://github.com/steel-gareth/claude-zellij-whip
 cd claude-zellij-whip
 make setup    # configure git hooks (auto-generates version on each commit)
 make install
@@ -57,7 +57,7 @@ Add the flake to your config inputs:
 
 ```nix
 {
-  inputs.claude-zellij-whip.url = "github:rvcas/claude-zellij-whip";
+  inputs.claude-zellij-whip.url = "github:steel-gareth/claude-zellij-whip";
 }
 ```
 

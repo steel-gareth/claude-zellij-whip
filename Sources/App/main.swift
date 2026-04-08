@@ -2,7 +2,7 @@ import AppKit
 import ClaudeZellijWhipCore
 import OSLog
 
-private let log = Logger(subsystem: "dev.rvcas.claude-zellij-whip", category: "main")
+private let log = Logger(subsystem: "dev.steel-gareth.claude-zellij-whip", category: "main")
 
 let app = NSApplication.shared
 let args = CommandLine.arguments
