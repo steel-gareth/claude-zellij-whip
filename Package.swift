@@ -7,8 +7,14 @@ let package = Package(
   name: "claude-zellij-whip",
   platforms: [.macOS(.v13)],
   targets: [
+    .target(
+      name: "PrivateAPI",
+      path: "PrivateAPI"
+    ),
     .executableTarget(
-      name: "claude-zellij-whip"
-    )
+      name: "claude-zellij-whip",
+      dependencies: ["PrivateAPI"],
+      path: "Sources"
+    ),
   ]
 )

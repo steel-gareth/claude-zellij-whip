@@ -37,8 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     let session = userInfo["session"] as? String
     let tabName = userInfo["tabName"] as? String
     let paneId = userInfo["paneId"] as? String
+    let windowID = userInfo["windowID"] as? UInt32
 
-    focusGhostty()
+    focusGhostty(windowID: windowID)
 
     if let session = session, !session.isEmpty,
       let tabName = tabName, !tabName.isEmpty

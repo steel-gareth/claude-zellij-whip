@@ -11,6 +11,7 @@ func sendNotification(args: [String]) async {
   let session = ProcessInfo.processInfo.environment["ZELLIJ_SESSION_NAME"]
   let paneId = ProcessInfo.processInfo.environment["ZELLIJ_PANE_ID"]
   let tabName = getCurrentTabName(session: session)
+  let windowID = findGhosttyWindowID(session: session)
 
   let center = UNUserNotificationCenter.current()
   let settings = await center.notificationSettings()
@@ -37,6 +38,7 @@ func sendNotification(args: [String]) async {
     "session": session ?? "",
     "tabName": tabName ?? "",
     "paneId": paneId ?? "",
+    "windowID": windowID ?? 0,
   ]
 
   let request = UNNotificationRequest(
